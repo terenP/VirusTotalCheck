@@ -5,10 +5,10 @@ Created for Education
 ### Use:
 
 ```cmd
-TotalVirusCheck.exe "C:\file.exe" "******..."
+VirusTotalCheck.exe "C:\file.exe" "******..."
 ```
 ```cmd
-TotalVirusCheck.exe "file.exe" "api.txt"
+VirusTotalCheck.exe "file.exe" "api.txt"
 ```
 
 or just run the program and it will ask you for data in the console
