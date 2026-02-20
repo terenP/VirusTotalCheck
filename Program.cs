@@ -10,10 +10,10 @@ namespace TotalVirusCheck
         static string? filePath = "";
         static string? apikey = "";
         private static HttpClient httpClient = new HttpClient();
+
         static async Task Main(string[] args)
         {
-
-            // Check
+            // Check args
             if (args.Length != 2)
             {
                 Console.WriteLine("File path: ");
@@ -36,15 +36,12 @@ namespace TotalVirusCheck
                     Console.ReadKey();
                     return;
                 }
-                
-
             }
             else
             {
                 filePath = args[0];
                 apikey = args[1];
             }
-            
             
             if (!File.Exists(filePath))
             {
@@ -93,7 +90,6 @@ namespace TotalVirusCheck
             }
 
             //Send
-
             if(!VirusTotalClient(apikey))
             {
                 Console.WriteLine("Internet Error");
@@ -144,7 +140,6 @@ namespace TotalVirusCheck
                 Console.ReadKey();
                 return;
             }
-
         }
 
         public static void Present(ScanSummary summary, bool noted)
@@ -170,8 +165,6 @@ namespace TotalVirusCheck
                     count++;
                     Console.WriteLine($"{count}. [{det.Category.ToUpper()}] {det.Engine}: {det.Result}");
                 }
-
-
             }
 
             Console.WriteLine("═══════════════════════════════════════════════════════");
@@ -179,8 +172,6 @@ namespace TotalVirusCheck
 
         public static async Task<CheckResult> CheckHashAsync(string hash)
         {
-
-
             var response = await httpClient.GetAsync(
                  $"https://www.virustotal.com/api/v3/files/{hash}"
                  );
@@ -198,7 +189,6 @@ namespace TotalVirusCheck
                 Exist = true,
                 Data = json
             };
-
         }
 
         public static async Task<UploadResult> UploadFileAsync(string filePath)
@@ -218,14 +208,12 @@ namespace TotalVirusCheck
 
             var json = await response.Content.ReadAsStringAsync();
             return ParseUploadResponse(json);
-
         }
 
         public static bool VirusTotalClient(string apikey)
         {
             try
             {
-                //httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.Add("x-apikey", apikey);
                 httpClient.Timeout = TimeSpan.FromMinutes(5);
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("VirusTotalCheck/1.0");
@@ -277,7 +265,6 @@ namespace TotalVirusCheck
                     }
                 }
             }
-
             return summary;
         }
 
@@ -343,7 +330,5 @@ namespace TotalVirusCheck
             public required string Result { get; set; }
             public required string Category { get; set; }
         }
-
     }
-
 }
