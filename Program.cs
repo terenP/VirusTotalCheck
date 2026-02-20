@@ -11,6 +11,9 @@ namespace TotalVirusCheck
         static string? apikey = "";
         private static HttpClient httpClient = new HttpClient();
 
+        // <summary>
+        /// A simple console scanner sending file to VirusTotal API and displays the results. Created for Education
+        /// </summary>
         static async Task Main(string[] args)
         {
             // Check args
@@ -78,9 +81,6 @@ namespace TotalVirusCheck
             try
             {
                 using (FileStream fs = File.OpenRead(filePath))
-                {
-
-                }
             }
             catch
             {
@@ -108,7 +108,6 @@ namespace TotalVirusCheck
                     Console.ReadKey();
                     return;
                 }
-
             }
             catch (Exception ex)
             {
@@ -142,6 +141,11 @@ namespace TotalVirusCheck
             }
         }
 
+        /// <summary>
+        /// Present Result in Console
+        /// </summary>
+        /// <param name="summary">ScanSummary</param>
+        /// <param name="noted">bool whether the scanned file has already been noted</param>
         public static void Present(ScanSummary summary, bool noted)
         {
             Console.WriteLine("\n═══════════════════════════════════════════════════════");
@@ -170,6 +174,11 @@ namespace TotalVirusCheck
             Console.WriteLine("═══════════════════════════════════════════════════════");
         }
 
+        /// <summary>
+        /// asynchronously sending a file hash
+        /// </summary>
+        /// <param name="hash">hash scan file</param>
+        /// <returns></returns>
         public static async Task<CheckResult> CheckHashAsync(string hash)
         {
             var response = await httpClient.GetAsync(
@@ -191,6 +200,11 @@ namespace TotalVirusCheck
             };
         }
 
+        /// <summary>
+        /// asynchronously sending a file
+        /// </summary>
+        /// <param name="filePath">Path to scan file</param>
+        /// <returns></returns>
         public static async Task<UploadResult> UploadFileAsync(string filePath)
         {
             using var form = new MultipartFormDataContent();
@@ -210,6 +224,11 @@ namespace TotalVirusCheck
             return ParseUploadResponse(json);
         }
 
+        /// <summary>
+        /// httpClient
+        /// </summary>
+        /// <param name="apikey">VirusTotal API Key</param>
+        /// <returns></returns>
         public static bool VirusTotalClient(string apikey)
         {
             try
@@ -222,6 +241,11 @@ namespace TotalVirusCheck
             catch { return false; }
         }
 
+        /// <summary>
+        /// Convetr data from JSON to ScanSummary
+        /// </summary>
+        /// <param name="json">JSON data</param>
+        /// <returns></returns>
         public static ScanSummary ParseResults(string json)
         {
             var summary = new ScanSummary();
@@ -268,7 +292,11 @@ namespace TotalVirusCheck
             return summary;
         }
 
-
+        /// <summary>
+        /// Calculate Scan File Hash
+        /// </summary>
+        /// <param name="filePath">Path to scan file</param>
+        /// <returns></returns>
         public static string CalculateFileHash(string filePath)
         {
                 using var sha256 = SHA256.Create();
@@ -277,6 +305,11 @@ namespace TotalVirusCheck
                 return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
 
+        /// <summary>
+        /// Convetr upload file data from JSON to UploadResult
+        /// </summary>
+        /// <param name="json">JSON data</param>
+        /// <returns></returns>
         public static UploadResult ParseUploadResponse(string json)
         {
             using var doc = JsonDocument.Parse(json);
@@ -300,7 +333,6 @@ namespace TotalVirusCheck
                 Data = status == "completed" ? json : null
             };
         }
-
 
         public class CheckResult
         {
